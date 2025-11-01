@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>🌍 Smart Tourist Trip Planner</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>✈️ Smart Tourist Trip Planner</h1>
+        <p>Plan your perfect trip — shortest routes, minimal cost & optimized itinerary!</p>
+    </header>
+
+    <main>
+        <form method="POST" class="input-form">
+            <label>Enter Tourist Places (comma-separated):</label>
+            <input type="text" name="places" placeholder="Taj Mahal, Agra Fort, Fatehpur Sikri" required>
+            <button type="submit">✨ Plan My Trip</button>
+        </form>
+
+        {% if result %}
+            {% if result.error %}
+                <p class="error">{{ result.error }}</p>
+            {% else %}
+            <div class="card">
+                <h2>🧭 Optimized Trip Summary</h2>
+                <div class="info">
+                    <p><b>Places:</b> {{ result.places }}</p>
+                    <p><b>Dijkstra Shortest Distances:</b> {{ result.dijkstra }}</p>
+                    <p><b>Minimum Spanning Tree:</b></p>
+                    <ul>
+                        {% for u, v, w in result.mst %}
+                            <li>🌐 {{ u }} — {{ v }} ({{ w }})</li>
+                        {% endfor %}
+                    </ul>
+                    <p><b>Optimal Tour (TSP Path):</b> {{ result.tsp.path }}<br>
+                       <b>Total Cost:</b> {{ result.tsp.cost }}</p>
+                </div>
+
+                <div class="visual">
+                    <h3>🗺️ Route Visualization</h3>
+                    <img src="data:image/png;base64,{{ result.image }}" alt="Route Visualization">
+                </div>
+            </div>
+            {% endif %}
+        {% endif %}
+    </main>
+
+    <footer>
+        <p>Developed with ❤️ using Flask | Algorithms: Dijkstra, Kruskal, TSP</p>
+    </footer>
+</body>
+</html>
